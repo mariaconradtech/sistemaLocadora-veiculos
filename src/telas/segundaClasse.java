@@ -8,6 +8,6 @@ package telas;
  *
  * @author maria
  */
-public class teste {
+public class segundaClasse {
     
 }
