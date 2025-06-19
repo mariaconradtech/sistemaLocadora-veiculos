@@ -29,8 +29,4 @@ public class Automovel extends Veiculo {
             default -> 0.0;
         };
     }
-    
-    public enum ModeloAutomovel {
-    Gol, Celta, Palio
-}
 }

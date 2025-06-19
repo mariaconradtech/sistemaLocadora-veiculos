@@ -76,4 +76,7 @@ public abstract class Veiculo implements VeiculoI {
         }
         return valorVenda;
     }
+    
+    @Override
+    public abstract double getValorDiariaLocacao();
 }

@@ -8,6 +8,6 @@ package modelo;
  *
  * @author maria
  */
-public enum ModeloMotocicleta {
-    CG_125, CBR_500
+public enum ModeloAutomovel {
+    Gol, Celta, Palio
 }

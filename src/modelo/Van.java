@@ -22,16 +22,12 @@ public class Van extends Veiculo {
 
     @Override
     public double getValorDiariaLocacao() {
-        switch (categoria) {
-            case POPULAR:
-                return 200.0;
-            case INTERMEDIARIO:
-                return 400.0;
-            case LUXO:
-                return 600.0;
-            default:
-                return 0.0;
-        }
+        return switch (categoria) {
+            case POPULAR -> 200.0;
+            case INTERMEDIARIO -> 400.0;
+            case LUXO -> 600.0;
+            default -> 0.0;
+        };
     }
 }
 

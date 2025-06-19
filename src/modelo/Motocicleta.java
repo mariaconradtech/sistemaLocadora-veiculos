@@ -22,19 +22,11 @@ public class Motocicleta extends Veiculo {
     
     @Override 
     public double getValorDiariaLocacao() {
-        switch (categoria) {
-            case POPULAR:
-                return 70.0;
-            case INTERMEDIARIO:
-                return 200.0;
-            case LUXO:
-                return 350.0;
-            default:
-                return 0.0;
-        }
-    }
-
-    public enum ModeloMotocicleta {
-        CG_125, CBR_500
+        return switch (categoria) {
+            case POPULAR -> 70.0;
+            case INTERMEDIARIO -> 200.0;
+            case LUXO -> 350.0;
+            default -> 0.0;
+        };
     }
 }
