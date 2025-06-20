@@ -23,9 +23,9 @@ public class Motocicleta extends Veiculo {
     @Override 
     public double getValorDiariaLocacao() {
         return switch (categoria) {
-            case POPULAR -> 70.0;
-            case INTERMEDIARIO -> 200.0;
-            case LUXO -> 350.0;
+            case Popular -> 70.0;
+            case Intermediário -> 200.0;
+            case Luxo -> 350.0;
             default -> 0.0;
         };
     }

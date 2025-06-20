@@ -9,5 +9,5 @@ package modelo;
  * @author maria
  */
 public enum Categoria {
-    POPULAR, INTERMEDIARIO, LUXO
+    Popular, Intermediário, Luxo
 }
