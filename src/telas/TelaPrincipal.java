@@ -2,59 +2,91 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package telas;
 
+
+package telas;
 
 import javax.swing.*;
 import java.awt.*;
+import controle.DadosSistema;
 
 public class TelaPrincipal extends JFrame {
 
-    private JButton btnClientes, btnVeiculos, btnLocacoes, btnSair;
-
     public TelaPrincipal() {
-        setTitle("Sistema de Locadora de Veículos");
-        setSize(500, 400);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
+        setTitle("VeloCuritiba - Locadora de Veículos");
 
-        // Cabeçalho
-        JLabel titulo = new JLabel("Bem-vindo à Locadora de Veículos", JLabel.CENTER);
-        titulo.setFont(new Font("Arial", Font.BOLD, 20));
-        titulo.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
-        add(titulo, BorderLayout.NORTH);
+        // Tela cheia
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Painel de botões central
-        JPanel painelCentral = new JPanel(new GridLayout(3, 1, 10, 10));
-        painelCentral.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
+        // Painel principal com fundo cinza
+        JPanel painelPrincipal = new JPanel();
+        painelPrincipal.setBackground(new Color(64, 64, 64)); // Cinza escuro profissional
+        painelPrincipal.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(20, 20, 20, 20); // Espaçamento entre os componentes
 
-        btnClientes = new JButton("Gerenciar Clientes");
-        btnVeiculos = new JButton("Gerenciar Veículos");
-        btnLocacoes = new JButton("Gerenciar Locações");
+        // Logo estilizada
+        JLabel lblLogo = new JLabel("VELOCURITIBA");
+        lblLogo.setForeground(new Color(255, 102, 0)); // Laranja vibrante
+        lblLogo.setFont(new Font("Impact", Font.BOLD, 80)); // Fonte forte
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.CENTER;
+        painelPrincipal.add(lblLogo, gbc);
 
-        painelCentral.add(btnClientes);
-        painelCentral.add(btnVeiculos);
-        painelCentral.add(btnLocacoes);
+        // Slogan
+        JLabel lblSlogan = new JLabel("Seu caminho, nossa direção");
+        lblSlogan.setForeground(Color.LIGHT_GRAY);
+        lblSlogan.setFont(new Font("SansSerif", Font.ITALIC, 28));
+        gbc.gridy = 1;
+        painelPrincipal.add(lblSlogan, gbc);
 
-        add(painelCentral, BorderLayout.CENTER);
+        // Painel para botões
+        JPanel painelBotoes = new JPanel();
+        painelBotoes.setBackground(new Color(64, 64, 64));  // Mesmo fundo cinza
+        painelBotoes.setLayout(new GridLayout(5, 1, 25, 25));  // 5 linhas, 1 coluna, espaço entre botões
 
-        // Rodapé com botão de sair
-        btnSair = new JButton("Sair");
-        JPanel painelRodape = new JPanel();
-        painelRodape.add(btnSair);
-        add(painelRodape, BorderLayout.SOUTH);
+        // Criando os botões com estilo laranja
+        JButton btnClientes = criarBotaoEstilo("Clientes");
+        JButton btnVeiculos = criarBotaoEstilo("Cadastrar veículo");
+        JButton btnLocacao = criarBotaoEstilo("Locação");
+        JButton btnDevolucao = criarBotaoEstilo("Devolução");
+        JButton btnVenda = criarBotaoEstilo("Venda");
 
-        // Eventos dos botões
-        btnClientes.addActionListener(e -> new TelaCliente());
-        btnVeiculos.addActionListener(e -> new TelaVeiculo());
-        btnLocacoes.addActionListener(e -> new TelaLocacao());
-        btnSair.addActionListener(e -> System.exit(0));
+        painelBotoes.add(btnClientes);
+        painelBotoes.add(btnVeiculos);
+        painelBotoes.add(btnLocacao);
+        painelBotoes.add(btnDevolucao);
+        painelBotoes.add(btnVenda);
 
-        setVisible(true);
+        gbc.gridy = 2;
+        painelPrincipal.add(painelBotoes, gbc);
+
+        // Ações dos botões
+        btnClientes.addActionListener(e -> new TelaCliente().setVisible(true));
+        btnVeiculos.addActionListener(e -> new TelaCadastroVeiculos().setVisible(true));
+        //btnLocacao.addActionListener(e -> new TelaLocacao(DadosSistema.listaClientes, DadosSistema.listaVeiculos).setVisible(true));
+        //btnDevolucao.addActionListener(e -> new TelaDevolucao(DadosSistema.listaVeiculos).setVisible(true));
+        //btnVenda.addActionListener(e -> new TelaVenda(DadosSistema.listaVeiculos).setVisible(true));
+
+
+        add(painelPrincipal);
+    }
+
+    private JButton criarBotaoEstilo(String texto) {
+        JButton botao = new JButton(texto);
+        botao.setBackground(new Color(255, 102, 0)); // Laranja vibrante
+        botao.setForeground(Color.WHITE);
+        botao.setFont(new Font("Arial", Font.BOLD, 26));
+        botao.setFocusPainted(false); // Tirar a borda de foco azul
+        botao.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20)); // Espaçamento interno
+        return botao;
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(TelaPrincipal::new);
+        SwingUtilities.invokeLater(() -> new TelaPrincipal().setVisible(true));
     }
 }
+
+
