@@ -1,19 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package telas;
 
-/**
- *
- * @author rodri
- */
 import modelo.Cliente;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class TelaCliente extends JFrame {
     private JTextField txtNome, txtSobrenome, txtRg, txtCpf, txtEndereco;
@@ -23,80 +14,156 @@ public class TelaCliente extends JFrame {
 
     public TelaCliente() {
         setTitle("Cadastro de Clientes");
-        setSize(700, 400);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setSize(900, 600);
         setLocationRelativeTo(null);
+
+        // Tema moderno FlatLaf Dark
+        try {
+            UIManager.setLookAndFeel("com.formdev.flatlaf.FlatDarkLaf");
+            SwingUtilities.updateComponentTreeUI(this);
+        } catch (Exception ex) {
+            System.out.println("Não foi possível aplicar FlatLaf: " + ex.getMessage());
+        }
+
+        // Layout principal
+        setLayout(new BorderLayout(10, 10));
+        ((JComponent) getContentPane()).setBorder(new EmptyBorder(15, 15, 15, 15));
 
         modelo = new ClienteTableModel(new ArrayList<>());
         tabela = new JTable(modelo);
+        tabela.setAutoCreateRowSorter(true);
+
         JScrollPane scroll = new JScrollPane(tabela);
-
-        JPanel painelForm = new JPanel(new GridLayout(6, 2));
-        txtNome = new JTextField();
-        txtSobrenome = new JTextField();
-        txtRg = new JTextField();
-        txtCpf = new JTextField();
-        txtEndereco = new JTextField();
-
-        painelForm.add(new JLabel("Nome:"));
-        painelForm.add(txtNome);
-        painelForm.add(new JLabel("Sobrenome:"));
-        painelForm.add(txtSobrenome);
-        painelForm.add(new JLabel("RG:"));
-        painelForm.add(txtRg);
-        painelForm.add(new JLabel("CPF:"));
-        painelForm.add(txtCpf);
-        painelForm.add(new JLabel("Endereço:"));
-        painelForm.add(txtEndereco);
-
-        btnAdicionar = new JButton("Adicionar");
-        btnAtualizar = new JButton("Atualizar");
-        btnExcluir = new JButton("Excluir");
-
-        painelForm.add(btnAdicionar);
-        painelForm.add(btnAtualizar);
-
-        add(painelForm, BorderLayout.NORTH);
+        scroll.setPreferredSize(new Dimension(700, 300));
         add(scroll, BorderLayout.CENTER);
-        add(btnExcluir, BorderLayout.SOUTH);
 
-        // Ações
+        // Painel formulário com GridBagLayout para flexibilidade
+        JPanel painelForm = new JPanel(new GridBagLayout());
+        painelForm.setBorder(BorderFactory.createTitledBorder("Dados do Cliente"));
+        add(painelForm, BorderLayout.NORTH);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(8, 8, 8, 8);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        // Labels e TextFields
+        JLabel lblNome = new JLabel("Nome:");
+        txtNome = new JTextField(15);
+        JLabel lblSobrenome = new JLabel("Sobrenome:");
+        txtSobrenome = new JTextField(15);
+        JLabel lblRg = new JLabel("RG:");
+        txtRg = new JTextField(15);
+        JLabel lblCpf = new JLabel("CPF:");
+        txtCpf = new JTextField(15);
+        JLabel lblEndereco = new JLabel("Endereço:");
+        txtEndereco = new JTextField(15);
+
+        // Linha 1
+        gbc.gridx = 0; gbc.gridy = 0;
+        painelForm.add(lblNome, gbc);
+        gbc.gridx = 1;
+        painelForm.add(txtNome, gbc);
+
+        gbc.gridx = 2;
+        painelForm.add(lblSobrenome, gbc);
+        gbc.gridx = 3;
+        painelForm.add(txtSobrenome, gbc);
+
+        // Linha 2
+        gbc.gridx = 0; gbc.gridy = 1;
+        painelForm.add(lblRg, gbc);
+        gbc.gridx = 1;
+        painelForm.add(txtRg, gbc);
+
+        gbc.gridx = 2;
+        painelForm.add(lblCpf, gbc);
+        gbc.gridx = 3;
+        painelForm.add(txtCpf, gbc);
+
+        // Linha 3
+        gbc.gridx = 0; gbc.gridy = 2;
+        painelForm.add(lblEndereco, gbc);
+        gbc.gridwidth = 3;
+        gbc.gridx = 1;
+        painelForm.add(txtEndereco, gbc);
+        gbc.gridwidth = 1;
+
+        // Painel para botões
+        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 0));
+        painelBotoes.setBorder(new EmptyBorder(10, 0, 0, 0));
+        btnAdicionar = criarBotao("Adicionar");
+        btnAtualizar = criarBotao("Atualizar");
+        btnExcluir = criarBotao("Excluir");
+        painelBotoes.add(btnAdicionar);
+        painelBotoes.add(btnAtualizar);
+        painelBotoes.add(btnExcluir);
+
+        gbc.gridx = 3; gbc.gridy = 3;
+        gbc.anchor = GridBagConstraints.EAST;
+        painelForm.add(painelBotoes, gbc);
+
+        // Ações dos botões
         btnAdicionar.addActionListener(e -> adicionarCliente());
         btnAtualizar.addActionListener(e -> atualizarCliente());
         btnExcluir.addActionListener(e -> excluirCliente());
 
+        // Preencher campos ao selecionar na tabela
+        tabela.getSelectionModel().addListSelectionListener(e -> preencherCampos());
+
         setVisible(true);
     }
 
+    private JButton criarBotao(String texto) {
+        JButton botao = new JButton(texto);
+        botao.setPreferredSize(new Dimension(110, 35));
+        botao.setBackground(new Color(255, 102, 0));
+        botao.setForeground(Color.WHITE);
+        botao.setFont(new Font("Arial", Font.BOLD, 14));
+        botao.setFocusPainted(false);
+        return botao;
+    }
+
     private void adicionarCliente() {
+        if (camposEstaoVazios()) {
+            JOptionPane.showMessageDialog(this, "Preencha todos os campos.");
+            return;
+        }
         Cliente c = new Cliente(
-                txtNome.getText(),
-                txtSobrenome.getText(),
-                txtRg.getText(),
-                txtCpf.getText(),
-                txtEndereco.getText()
+                txtNome.getText().trim(),
+                txtSobrenome.getText().trim(),
+                txtRg.getText().trim(),
+                txtCpf.getText().trim(),
+                txtEndereco.getText().trim()
         );
         modelo.adicionar(c);
         limparCampos();
+        JOptionPane.showMessageDialog(this, "Cliente adicionado com sucesso.");
     }
 
     private void atualizarCliente() {
         int row = tabela.getSelectedRow();
         if (row == -1) {
-            JOptionPane.showMessageDialog(this, "Selecione um cliente.");
+            JOptionPane.showMessageDialog(this, "Selecione um cliente para atualizar.");
             return;
         }
-
-        Cliente c = new Cliente(
-                txtNome.getText(),
-                txtSobrenome.getText(),
-                txtRg.getText(),
-                txtCpf.getText(),
-                txtEndereco.getText()
+        if (camposEstaoVazios()) {
+            JOptionPane.showMessageDialog(this, "Preencha todos os campos.");
+            return;
+        }
+        Cliente clienteAtual = modelo.getCliente(row);
+        Cliente atualizado = new Cliente(
+                txtNome.getText().trim(),
+                txtSobrenome.getText().trim(),
+                txtRg.getText().trim(),
+                txtCpf.getText().trim(),
+                txtEndereco.getText().trim()
         );
-        c.setTemVeiculoLocado(modelo.getCliente(row).isTemVeiculoLocado()); // manter info
-        modelo.atualizar(row, c);
+        atualizado.setTemVeiculoLocado(clienteAtual.isTemVeiculoLocado());
+
+        modelo.atualizar(row, atualizado);
         limparCampos();
+        JOptionPane.showMessageDialog(this, "Cliente atualizado com sucesso.");
     }
 
     private void excluirCliente() {
@@ -105,13 +172,34 @@ public class TelaCliente extends JFrame {
             JOptionPane.showMessageDialog(this, "Selecione um cliente.");
             return;
         }
-
         Cliente c = modelo.getCliente(row);
         if (c.isTemVeiculoLocado()) {
             JOptionPane.showMessageDialog(this, "Cliente possui veículo locado. Não pode ser excluído.");
         } else {
             modelo.remover(row);
+            limparCampos();
+            JOptionPane.showMessageDialog(this, "Cliente excluído com sucesso.");
         }
+    }
+
+    private void preencherCampos() {
+        int row = tabela.getSelectedRow();
+        if (row != -1) {
+            Cliente c = modelo.getCliente(row);
+            txtNome.setText(c.getNome());
+            txtSobrenome.setText(c.getSobrenome());
+            txtRg.setText(c.getRg());
+            txtCpf.setText(c.getCpf());
+            txtEndereco.setText(c.getEndereco());
+        }
+    }
+
+    private boolean camposEstaoVazios() {
+        return txtNome.getText().trim().isEmpty() ||
+                txtSobrenome.getText().trim().isEmpty() ||
+                txtRg.getText().trim().isEmpty() ||
+                txtCpf.getText().trim().isEmpty() ||
+                txtEndereco.getText().trim().isEmpty();
     }
 
     private void limparCampos() {
@@ -120,9 +208,16 @@ public class TelaCliente extends JFrame {
         txtRg.setText("");
         txtCpf.setText("");
         txtEndereco.setText("");
+        tabela.clearSelection();
     }
 
     public static void main(String[] args) {
+        // Aplica tema antes da criação da UI
+        try {
+            UIManager.setLookAndFeel("com.formdev.flatlaf.FlatDarkLaf");
+        } catch (Exception ex) {
+            System.out.println("Não foi possível aplicar FlatLaf: " + ex.getMessage());
+        }
         SwingUtilities.invokeLater(TelaCliente::new);
     }
 }
