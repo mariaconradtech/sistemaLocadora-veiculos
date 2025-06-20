@@ -30,14 +30,14 @@ public class TelaCadastroVeiculos extends JFrame {
         painelPrincipal.setBackground(new Color(64, 64, 64));
         painelPrincipal.setLayout(new BoxLayout(painelPrincipal, BoxLayout.Y_AXIS));
 
-        
+        // Logo
         JLabel lblLogo = new JLabel("VELOCURITIBA", SwingConstants.CENTER);
         lblLogo.setForeground(new Color(255, 102, 0));
         lblLogo.setFont(new Font("Impact", Font.BOLD, 50));
         lblLogo.setAlignmentX(Component.CENTER_ALIGNMENT);
         painelPrincipal.add(lblLogo);
 
-        
+        // Slogan
         JLabel lblSlogan = new JLabel("Seu caminho, nossa direção", SwingConstants.CENTER);
         lblSlogan.setForeground(Color.LIGHT_GRAY);
         lblSlogan.setFont(new Font("SansSerif", Font.ITALIC, 20));
@@ -57,22 +57,23 @@ public class TelaCadastroVeiculos extends JFrame {
         JLabel[] labels = {
             new JLabel("Tipo de Veículo:"),
             new JLabel("Marca:"),
+            new JLabel("Modelo:"), 
             new JLabel("Categoria:"),
             new JLabel("Valor de Compra:"),
             new JLabel("Placa:"),
-            new JLabel("Ano:"),
-            new JLabel("Modelo:")
+            new JLabel("Ano:")
         };
 
         JComponent[] campos = {
             comboTipo = new JComboBox<>(new String[]{"Automóvel", "Motocicleta", "Van"}),
             comboMarca = new JComboBox<>(Marca.values()),
+            comboModelo = new JComboBox<>(), 
             comboCategoria = new JComboBox<>(Categoria.values()),
             txtValorCompra = new JTextField(),
             txtPlaca = new JTextField(),
-            txtAno = new JTextField(),
-            comboModelo = new JComboBox<>()
+            txtAno = new JTextField()
         };
+
 
         for (int i = 0; i < labels.length; i++) {
             labels[i].setForeground(Color.WHITE);

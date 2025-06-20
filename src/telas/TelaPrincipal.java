@@ -21,15 +21,15 @@ public class TelaPrincipal extends JFrame {
 
         // Painel principal com fundo cinza
         JPanel painelPrincipal = new JPanel();
-        painelPrincipal.setBackground(new Color(64, 64, 64)); // Cinza escuro profissional
+        painelPrincipal.setBackground(new Color(64, 64, 64)); 
         painelPrincipal.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(20, 20, 20, 20); // Espaçamento entre os componentes
 
         // Logo estilizada
         JLabel lblLogo = new JLabel("VELOCURITIBA");
-        lblLogo.setForeground(new Color(255, 102, 0)); // Laranja vibrante
-        lblLogo.setFont(new Font("Impact", Font.BOLD, 80)); // Fonte forte
+        lblLogo.setForeground(new Color(255, 102, 0)); 
+        lblLogo.setFont(new Font("Impact", Font.BOLD, 80)); 
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -44,10 +44,10 @@ public class TelaPrincipal extends JFrame {
 
         // Painel para botões
         JPanel painelBotoes = new JPanel();
-        painelBotoes.setBackground(new Color(64, 64, 64));  // Mesmo fundo cinza
+        painelBotoes.setBackground(new Color(64, 64, 64));  
         painelBotoes.setLayout(new GridLayout(5, 1, 25, 25));  // 5 linhas, 1 coluna, espaço entre botões
 
-        // Criando os botões com estilo laranja
+       
         JButton btnClientes = criarBotaoEstilo("Clientes");
         JButton btnVeiculos = criarBotaoEstilo("Cadastrar veículo");
         JButton btnLocacao = criarBotaoEstilo("Locação");
@@ -76,11 +76,11 @@ public class TelaPrincipal extends JFrame {
 
     private JButton criarBotaoEstilo(String texto) {
         JButton botao = new JButton(texto);
-        botao.setBackground(new Color(255, 102, 0)); // Laranja vibrante
+        botao.setBackground(new Color(255, 102, 0)); 
         botao.setForeground(Color.WHITE);
         botao.setFont(new Font("Arial", Font.BOLD, 26));
-        botao.setFocusPainted(false); // Tirar a borda de foco azul
-        botao.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20)); // Espaçamento interno
+        botao.setFocusPainted(false); 
+        botao.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20)); 
         return botao;
     }
 
