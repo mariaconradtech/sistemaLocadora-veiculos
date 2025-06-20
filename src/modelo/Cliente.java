@@ -1,19 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package modelo;
 
-/**
- *
- * @author maria
- */
+
 public class Cliente {
     private String nome;
     private String sobrenome;
     private String rg;
     private String cpf;
     private String endereco;
+    private boolean temVeiculoLocado; // ADICIONADO dentro da classe
 
     public Cliente(String nome, String sobrenome, String rg, String cpf, String endereco) {
         this.nome = nome;
@@ -21,9 +15,10 @@ public class Cliente {
         this.rg = rg;
         this.cpf = cpf;
         this.endereco = endereco;
+        this.temVeiculoLocado = false; // valor padrão
     }
 
-    
+    // Getters e Setters
     public String getNome() { return nome; }
     public String getSobrenome() { return sobrenome; }
     public String getRg() { return rg; }
@@ -35,4 +30,14 @@ public class Cliente {
     public void setRg(String rg) { this.rg = rg; }
     public void setCpf(String cpf) { this.cpf = cpf; }
     public void setEndereco(String endereco) { this.endereco = endereco; }
+
+    // Getters e Setters do temVeiculoLocado
+    public boolean isTemVeiculoLocado() {
+        return temVeiculoLocado;
+    }
+
+    public void setTemVeiculoLocado(boolean temVeiculoLocado) {
+        this.temVeiculoLocado = temVeiculoLocado;
+    }
 }
+
