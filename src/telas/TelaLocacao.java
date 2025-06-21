@@ -49,7 +49,6 @@ public class TelaLocacao extends JFrame {
         painelPrincipal.add(criarPainelFormulario(), gbc);
 
         // Painel Tabela
-        gbc.gridy++;
         JScrollPane scroll = new JScrollPane(criarTabela());
         gbc.gridy++;
         gbc.fill = GridBagConstraints.BOTH;
@@ -127,8 +126,11 @@ public class TelaLocacao extends JFrame {
             if (v.getEstado() == Estado.DISPONIVEL && tipoOK && marcaOK && categoriaOK)
                 veiculosFiltrados.add(v);
         }
-        tabelaVeiculos.updateUI();
+
+        // Atualiza o TableModel
+        tabelaVeiculos.setModel(new VeiculoTableModel(veiculosFiltrados));
     }
+
 
     private void locarVeiculo() {
         int linha = tabelaVeiculos.getSelectedRow();
