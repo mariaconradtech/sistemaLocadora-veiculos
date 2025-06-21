@@ -9,61 +9,65 @@ import java.util.*;
 import java.util.List;
 
 public class TelaDevolucao extends JFrame {
-        //conferindo o commit
+
     private JTable tabelaVeiculosLocados;
     private List<Veiculo> listaVeiculos;
     private List<Veiculo> veiculosLocados = new ArrayList<>();
 
     private final Color fundo = new Color(64, 64, 64);
     private final Color laranja = new Color(255, 102, 0);
-    private final Color textoClaro = Color.LIGHT_GRAY;
-    private final Font fontePadrao = new Font("SansSerif", Font.BOLD, 20);
+    private final Color textoClaro = Color.WHITE;
+    private final Font fontePadrao = new Font("Arial", Font.PLAIN, 16);
 
     public TelaDevolucao(List<Veiculo> veiculos) {
         this.listaVeiculos = veiculos;
 
         setTitle("Devolução de Veículos");
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setSize(1000, 600);
+        setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLayout(new BorderLayout());
 
-        JPanel painelPrincipal = new JPanel(new GridBagLayout());
+        JPanel painelPrincipal = new JPanel();
+        painelPrincipal.setLayout(new BoxLayout(painelPrincipal, BoxLayout.Y_AXIS));
         painelPrincipal.setBackground(fundo);
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0; gbc.gridy = 0;
-        gbc.insets = new Insets(10, 10, 10, 10);
 
-        JLabel titulo = new JLabel("DEVOLUÇÃO DE VEÍCULOS");
-        titulo.setForeground(laranja);
-        titulo.setFont(new Font("Impact", Font.BOLD, 50));
-        painelPrincipal.add(titulo, gbc);
+        // Título
+        JLabel lblLogo = new JLabel("VELOCURITIBA", SwingConstants.CENTER);
+        lblLogo.setForeground(laranja);
+        lblLogo.setFont(new Font("Impact", Font.BOLD, 45));
+        lblLogo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        painelPrincipal.add(Box.createVerticalStrut(30));
+        painelPrincipal.add(lblLogo);
 
-        gbc.gridy++;
-        JScrollPane scroll = new JScrollPane(criarTabela());
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.weightx = 1;
-        gbc.weighty = 1;
-        painelPrincipal.add(scroll, gbc);
-        
-        gbc.gridy++;
+        // Slogan
+        JLabel lblSlogan = new JLabel("Seu caminho, nossa direção", SwingConstants.CENTER);
+        lblSlogan.setForeground(Color.LIGHT_GRAY);
+        lblSlogan.setFont(new Font("SansSerif", Font.ITALIC, 20));
+        lblSlogan.setAlignmentX(Component.CENTER_ALIGNMENT);
+        painelPrincipal.add(lblSlogan);
+        painelPrincipal.add(Box.createVerticalStrut(30));
+
+        // Tabela com veículos locados
+        tabelaVeiculosLocados = new JTable(new VeiculoLocadoTableModel(veiculosLocados));
+        JScrollPane scroll = new JScrollPane(tabelaVeiculosLocados);
+        scroll.setPreferredSize(new Dimension(900, 300));
+        scroll.getViewport().setBackground(Color.WHITE);
+        scroll.setAlignmentX(Component.CENTER_ALIGNMENT);
+        painelPrincipal.add(Box.createVerticalStrut(20));
+        painelPrincipal.add(scroll);
+        painelPrincipal.add(Box.createVerticalStrut(20));
+
+        // Botão devolver
         JButton btnDevolver = criarBotaoEstilo("Devolver Veículo");
+        btnDevolver.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnDevolver.addActionListener(e -> devolverVeiculo());
+        painelPrincipal.add(btnDevolver);
+        painelPrincipal.add(Box.createVerticalStrut(30));
 
-        // Ajuste para o botão não ocupar toda a largura
-        gbc.fill = GridBagConstraints.NONE; 
-        gbc.weightx = 0;
-        gbc.weighty = 0;
-        gbc.anchor = GridBagConstraints.CENTER; // Centraliza o botão
-        painelPrincipal.add(btnDevolver, gbc);
-
-
-        add(painelPrincipal);
+        add(painelPrincipal, BorderLayout.CENTER);
         filtrarVeiculosLocados();
         setVisible(true);
-    }
-
-    private JTable criarTabela() {
-        tabelaVeiculosLocados = new JTable(new VeiculoLocadoTableModel(veiculosLocados));
-        return tabelaVeiculosLocados;
     }
 
     private JButton criarBotaoEstilo(String texto) {
@@ -94,10 +98,9 @@ public class TelaDevolucao extends JFrame {
         }
 
         Veiculo v = veiculosLocados.get(linha);
-        v.devolver(); // método que coloca locacao = null e estado = DISPONIVEL
+        v.devolver();
         JOptionPane.showMessageDialog(this, "Veículo devolvido com sucesso!");
-
-        filtrarVeiculosLocados(); // atualiza a tabela após devolução
+        filtrarVeiculosLocados();
     }
 
     class VeiculoLocadoTableModel extends AbstractTableModel {
@@ -114,13 +117,19 @@ public class TelaDevolucao extends JFrame {
         }
 
         @Override
-        public int getRowCount() { return veiculos.size(); }
+        public int getRowCount() {
+            return veiculos.size();
+        }
 
         @Override
-        public int getColumnCount() { return colunas.length; }
+        public int getColumnCount() {
+            return colunas.length;
+        }
 
         @Override
-        public String getColumnName(int i) { return colunas[i]; }
+        public String getColumnName(int i) {
+            return colunas[i];
+        }
 
         @Override
         public Object getValueAt(int row, int col) {
@@ -136,10 +145,10 @@ public class TelaDevolucao extends JFrame {
                           (v instanceof Motocicleta m) ? m.getModelo() :
                           (v instanceof Van va) ? va.getModelo() : "N/A";
                 case 4 -> v.getAno();
-                case 5 -> loc != null ? sdf.format(loc.getData().getTime()) : "N/A"; 
+                case 5 -> loc != null ? sdf.format(loc.getData().getTime()) : "N/A";
                 case 6 -> String.format("R$ %.2f", v.getValorDiariaLocacao());
-                case 7 -> loc != null ? loc.getDias() : 0; 
-                case 8 -> loc != null ? String.format("R$ %.2f", loc.getValor()) : "R$ 0,00"; 
+                case 7 -> loc != null ? loc.getDias() : 0;
+                case 8 -> loc != null ? String.format("R$ %.2f", loc.getValor()) : "R$ 0,00";
                 default -> "";
             };
         }
