@@ -9,6 +9,7 @@ import java.util.*;
 import java.util.List;
 
 public class TelaDevolucao extends JFrame {
+        //conferindo o commit
     private JTable tabelaVeiculosLocados;
     private List<Veiculo> listaVeiculos;
     private List<Veiculo> veiculosLocados = new ArrayList<>();
