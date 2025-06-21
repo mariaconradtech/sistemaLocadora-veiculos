@@ -65,7 +65,7 @@ public class TelaPrincipal extends JFrame {
 
         // Ações dos botões
         btnClientes.addActionListener(e -> new TelaCliente().setVisible(true));
-       // btnVeiculos.addActionListener(e -> new TelaCadastroVeiculos().setVisible(true));
+        btnVeiculos.addActionListener(e -> new TelaCadastroVeiculos().setVisible(true));
         btnLocacao.addActionListener(e -> new TelaLocacao(DadosSistema.listaClientes, DadosSistema.listaVeiculos).setVisible(true));
         btnDevolucao.addActionListener(e -> new TelaDevolucao(DadosSistema.listaVeiculos).setVisible(true));
         //btnVenda.addActionListener(e -> new TelaVenda(DadosSistema.listaVeiculos).setVisible(true));

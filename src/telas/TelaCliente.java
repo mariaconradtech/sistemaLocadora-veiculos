@@ -1,6 +1,7 @@
 package telas;
 
 import modelo.Cliente;
+import controle.DadosSistema;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -136,6 +137,7 @@ public class TelaCliente extends JFrame {
                 txtCpf.getText().trim(),
                 txtEndereco.getText().trim()
         );
+        DadosSistema.listaClientes.add(c);
         modelo.adicionar(c);
         limparCampos();
         JOptionPane.showMessageDialog(this, "Cliente adicionado com sucesso.");
