@@ -48,7 +48,7 @@ public class TelaPrincipal extends JFrame {
         painelBotoes.setLayout(new GridLayout(5, 1, 25, 25));  // 5 linhas, 1 coluna, espaço entre botões
 
        
-        JButton btnClientes = criarBotaoEstilo("Clientes");
+        JButton btnClientes = criarBotaoEstilo("Cadastrar clientes");
         JButton btnVeiculos = criarBotaoEstilo("Cadastrar veículo");
         JButton btnLocacao = criarBotaoEstilo("Locação");
         JButton btnDevolucao = criarBotaoEstilo("Devolução");
@@ -68,7 +68,7 @@ public class TelaPrincipal extends JFrame {
         btnVeiculos.addActionListener(e -> new TelaCadastroVeiculos().setVisible(true));
         btnLocacao.addActionListener(e -> new TelaLocacao(DadosSistema.listaClientes, DadosSistema.listaVeiculos).setVisible(true));
         btnDevolucao.addActionListener(e -> new TelaDevolucao(DadosSistema.listaVeiculos).setVisible(true));
-        //btnVenda.addActionListener(e -> new TelaVenda(DadosSistema.listaVeiculos).setVisible(true));
+        btnVenda.addActionListener(e -> new TelaVenda(DadosSistema.listaVeiculos).setVisible(true));
 
 
         add(painelPrincipal);
