@@ -35,7 +35,7 @@ public class TelaLocacao extends JFrame {
         this.listaClientes = clientes;
         this.listaVeiculos = veiculos;
 
-        setTitle("Cadastro de Veículos - VeloCuritiba");
+        setTitle("Locação de Veículos - VeloCuritiba");
         setSize(800, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -79,7 +79,7 @@ public class TelaLocacao extends JFrame {
             comboCliente.addItem(c.getNome() + " " + c.getSobrenome());
         }
 
-        comboTipoVeiculo = new JComboBox<>(new String[]{"--Selecione--", "Automóvel", "Motocicleta", "Van"});
+        comboTipoVeiculo = new JComboBox<>(new String[]{"--Selecione--", "Automovel", "Motocicleta", "Van"});
 
         comboMarca = new JComboBox<>();
         comboMarca.addItem(null);
@@ -180,7 +180,7 @@ public class TelaLocacao extends JFrame {
             boolean marcaOK = marca == null || v.getMarca() == marca;
             boolean categoriaOK = categoria == null || v.getCategoria() == categoria;
 
-            if (v.getEstado() == Estado.DISPONIVEL && tipoOK && marcaOK && categoriaOK)
+            if ((v.getEstado() == Estado.DISPONIVEL ||v.getEstado() == Estado.NOVO)  && tipoOK && marcaOK && categoriaOK)
                 veiculosFiltrados.add(v);
         }
 

@@ -27,7 +27,7 @@ public class TelaDevolucao extends JFrame {
     public TelaDevolucao(List<Veiculo> veiculos) {
         this.listaVeiculos = veiculos;
 
-        setTitle("Devolução de Veículos");
+        setTitle("Devolução de Veículos - VeloCuritiba");
         setSize(1000, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

@@ -29,7 +29,7 @@ public abstract class Veiculo implements VeiculoI {
 
     @Override
     public void locar(int dias, java.util.Calendar data, Cliente cliente) {
-        if (estado == Estado.DISPONIVEL) {
+        if (estado == Estado.DISPONIVEL || estado == Estado.NOVO ) {
             double valorLocacao = dias * getValorDiariaLocacao();
             this.locacao = new Locacao(dias, valorLocacao, data, cliente);
             this.estado = Estado.LOCADO;

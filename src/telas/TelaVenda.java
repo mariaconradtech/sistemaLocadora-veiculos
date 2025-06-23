@@ -157,7 +157,7 @@ public class TelaVenda extends JFrame {
             boolean marcaOK = marca == null || v.getMarca() == marca;
             boolean categoriaOK = categoria == null || v.getCategoria() == categoria;
 
-            if (v.getEstado() == Estado.DISPONIVEL && tipoOK && marcaOK && categoriaOK)
+            if ((v.getEstado() == Estado.DISPONIVEL || v.getEstado() == Estado.NOVO) && tipoOK && marcaOK && categoriaOK)
                 veiculosFiltrados.add(v);
         }
 
@@ -203,15 +203,19 @@ public class TelaVenda extends JFrame {
         @Override
         public Object getValueAt(int row, int col) {
             Veiculo v = veiculos.get(row);
-            return switch (col) {
-                case 0 -> v.getPlaca();
-                case 1 -> v.getMarca();
-                //case 2 -> v.getModelo(); 
-                case 3 -> v.getAno();
-                case 4 -> NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(v.getValorParaVenda());
-                default -> null;
-            };
+            switch (col) {
+                case 0: return v.getPlaca();
+                case 1: return v.getMarca();
+                case 2:
+                    if (v instanceof Automovel) return ((Automovel) v).getModelo();
+                    if (v instanceof Motocicleta) return ((Motocicleta) v).getModelo();
+                    if (v instanceof Van) return ((Van) v).getModelo();
+                    return "N/A";
+                case 3: return v.getAno();
+                case 4: return NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(v.getValorParaVenda());
+                default: return "";
+            }
         }
-
     }
-}
+
+ }
