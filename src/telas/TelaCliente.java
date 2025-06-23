@@ -1,3 +1,4 @@
+
 package telas;
 
 import modelo.Cliente;
@@ -19,35 +20,31 @@ public class TelaCliente extends JFrame {
 
     // Construtor da tela
     public TelaCliente() {
-        setTitle("Cadastro de Clientes - VeloCuritiba"); // Título da janela
-        setSize(900, 650); // Tamanho da janela
-        setLocationRelativeTo(null); // Centraliza a janela
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Fecha apenas essa janela
-        setLayout(new BorderLayout()); // Layout principal
+        setTitle("Cadastro de Clientes - VeloCuritiba");
+        setSize(900, 650);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLayout(new BorderLayout());
 
-        // Painel principal com fundo e layout vertical
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setBackground(new Color(45, 45, 45));
         painelPrincipal.setLayout(new BoxLayout(painelPrincipal, BoxLayout.Y_AXIS));
-        painelPrincipal.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30)); // Margens internas
+        painelPrincipal.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
 
-        // Logo estilizado
         JLabel lblLogo = new JLabel("VELOCURITIBA", SwingConstants.CENTER);
         lblLogo.setForeground(new Color(255, 102, 0));
         lblLogo.setFont(new Font("Impact", Font.BOLD, 56));
         lblLogo.setAlignmentX(Component.CENTER_ALIGNMENT);
         painelPrincipal.add(lblLogo);
 
-        // Slogan abaixo do logo
         JLabel lblSlogan = new JLabel("Seu caminho, nossa direção", SwingConstants.CENTER);
         lblSlogan.setForeground(Color.LIGHT_GRAY);
         lblSlogan.setFont(new Font("SansSerif", Font.ITALIC, 22));
         lblSlogan.setAlignmentX(Component.CENTER_ALIGNMENT);
         painelPrincipal.add(lblSlogan);
 
-        painelPrincipal.add(Box.createVerticalStrut(25)); // Espaçamento
+        painelPrincipal.add(Box.createVerticalStrut(25));
 
-        // Painel para os campos de formulário
         JPanel painelCampos = new JPanel(new GridBagLayout());
         painelCampos.setBackground(new Color(64, 64, 64));
         painelCampos.setBorder(BorderFactory.createTitledBorder(
@@ -58,10 +55,9 @@ public class TelaCliente extends JFrame {
             Color.WHITE));
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(8, 10, 8, 10); // Espaçamento entre os componentes
-        gbc.fill = GridBagConstraints.HORIZONTAL; // Expandir horizontalmente
+        gbc.insets = new Insets(8, 10, 8, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Rótulos dos campos
         JLabel[] labels = {
             new JLabel("Nome:"),
             new JLabel("Sobrenome:"),
@@ -70,7 +66,6 @@ public class TelaCliente extends JFrame {
             new JLabel("Endereço:")
         };
 
-        // Campos de texto
         JComponent[] campos = {
             txtNome = new JTextField(),
             txtSobrenome = new JTextField(),
@@ -79,7 +74,6 @@ public class TelaCliente extends JFrame {
             txtEndereco = new JTextField()
         };
 
-        // Adiciona os rótulos e campos ao painel com GridBagLayout
         for (int i = 0; i < labels.length; i++) {
             labels[i].setForeground(Color.WHITE);
             gbc.gridx = 0;
@@ -95,7 +89,6 @@ public class TelaCliente extends JFrame {
         painelPrincipal.add(painelCampos);
         painelPrincipal.add(Box.createVerticalStrut(25));
 
-        // Tabela de clientes com fundo cinza estilizado
         modelo = new ClienteTableModel(DadosSistema.listaClientes);
         tabela = new JTable(modelo);
         tabela.setRowHeight(24);
@@ -107,7 +100,6 @@ public class TelaCliente extends JFrame {
         tabela.getTableHeader().setBackground(new Color(100, 100, 100));
         tabela.getTableHeader().setForeground(Color.WHITE);
 
-        // Scroll da tabela
         JScrollPane scrollPane = new JScrollPane(tabela);
         scrollPane.getViewport().setBackground(new Color(80, 80, 80));
         scrollPane.setPreferredSize(new Dimension(820, 160));
@@ -115,11 +107,9 @@ public class TelaCliente extends JFrame {
 
         painelPrincipal.add(Box.createVerticalStrut(20));
 
-        // Painel de botões com fundo escuro
         JPanel painelBotoes = new JPanel();
         painelBotoes.setBackground(new Color(64, 64, 64));
 
-        // Botões de ação
         btnAdicionar = criarBotaoEstilo("Adicionar");
         btnAtualizar = criarBotaoEstilo("Atualizar");
         btnExcluir = criarBotaoEstilo("Excluir");
@@ -130,21 +120,17 @@ public class TelaCliente extends JFrame {
 
         painelPrincipal.add(painelBotoes);
 
-        // Adiciona tudo à tela principal
         add(painelPrincipal, BorderLayout.CENTER);
 
-        // Ações dos botões
         btnAdicionar.addActionListener(e -> adicionarCliente());
         btnAtualizar.addActionListener(e -> atualizarCliente());
         btnExcluir.addActionListener(e -> excluirCliente());
 
-        // Preenche campos ao selecionar linha na tabela
         tabela.getSelectionModel().addListSelectionListener(e -> preencherCampos());
 
-        setVisible(true); // Exibe a janela
+        setVisible(true);
     }
 
-    // Cria botões com estilo personalizado
     private JButton criarBotaoEstilo(String texto) {
         JButton botao = new JButton(texto);
         botao.setBackground(new Color(255, 102, 0));
@@ -155,10 +141,17 @@ public class TelaCliente extends JFrame {
         return botao;
     }
 
-    // Adiciona cliente à lista
     private void adicionarCliente() {
         if (camposEstaoVazios()) {
             JOptionPane.showMessageDialog(this, "Preencha todos os campos.");
+            return;
+        }
+        if (!validarCpf(txtCpf.getText().trim())) {
+            JOptionPane.showMessageDialog(this, "CPF inválido.");
+            return;
+        }
+        if (!validarRg(txtRg.getText().trim())) {
+            JOptionPane.showMessageDialog(this, "RG inválido. Deve conter apenas números e ter entre 5 e 14 dígitos.");
             return;
         }
         Cliente c = new Cliente(
@@ -174,7 +167,6 @@ public class TelaCliente extends JFrame {
         limparCampos();
     }
 
-    // Atualiza cliente selecionado na tabela
     private void atualizarCliente() {
         int row = tabela.getSelectedRow();
         if (row == -1) {
@@ -183,6 +175,14 @@ public class TelaCliente extends JFrame {
         }
         if (camposEstaoVazios()) {
             JOptionPane.showMessageDialog(this, "Preencha todos os campos.");
+            return;
+        }
+        if (!validarCpf(txtCpf.getText().trim())) {
+            JOptionPane.showMessageDialog(this, "CPF inválido.");
+            return;
+        }
+        if (!validarRg(txtRg.getText().trim())) {
+            JOptionPane.showMessageDialog(this, "RG inválido. Deve conter apenas números e ter entre 5 e 14 dígitos.");
             return;
         }
         Cliente cliente = DadosSistema.listaClientes.get(row);
@@ -197,7 +197,6 @@ public class TelaCliente extends JFrame {
         limparCampos();
     }
 
-    // Remove cliente, se permitido
     private void excluirCliente() {
         int row = tabela.getSelectedRow();
         if (row == -1) {
@@ -215,7 +214,6 @@ public class TelaCliente extends JFrame {
         }
     }
 
-    // Preenche os campos com dados do cliente selecionado
     private void preencherCampos() {
         int row = tabela.getSelectedRow();
         if (row != -1) {
@@ -228,7 +226,6 @@ public class TelaCliente extends JFrame {
         }
     }
 
-    // Verifica se algum campo está vazio
     private boolean camposEstaoVazios() {
         return txtNome.getText().trim().isEmpty() ||
                txtSobrenome.getText().trim().isEmpty() ||
@@ -237,7 +234,31 @@ public class TelaCliente extends JFrame {
                txtEndereco.getText().trim().isEmpty();
     }
 
-    // Limpa os campos e desmarca a seleção da tabela
+    private boolean validarRg(String rg) {
+        return rg.matches("\\d{5,14}");
+    }
+
+    private boolean validarCpf(String cpf) {
+        cpf = cpf.replaceAll("[.-]", "");
+        if (!cpf.matches("\\d{11}")) return false;
+        if (cpf.chars().distinct().count() == 1) return false;
+
+        int soma1 = 0, soma2 = 0;
+        for (int i = 0; i < 9; i++) {
+            int digito = Character.getNumericValue(cpf.charAt(i));
+            soma1 += digito * (10 - i);
+            soma2 += digito * (11 - i);
+        }
+        int digito1 = (soma1 * 10) % 11;
+        if (digito1 == 10) digito1 = 0;
+        soma2 += digito1 * 2;
+        int digito2 = (soma2 * 10) % 11;
+        if (digito2 == 10) digito2 = 0;
+
+        return digito1 == Character.getNumericValue(cpf.charAt(9)) &&
+               digito2 == Character.getNumericValue(cpf.charAt(10));
+    }
+
     private void limparCampos() {
         txtNome.setText("");
         txtSobrenome.setText("");
@@ -247,7 +268,6 @@ public class TelaCliente extends JFrame {
         tabela.clearSelection();
     }
 
-    // Método principal que inicia a tela
     public static void main(String[] args) {
         SwingUtilities.invokeLater(TelaCliente::new);
     }
