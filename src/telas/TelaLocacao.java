@@ -36,28 +36,35 @@ public class TelaLocacao extends JFrame {
         this.listaVeiculos = veiculos;
 
         setTitle("Locação de Veículos - VeloCuritiba");
+        
+        // Tamanho fixo da janela
         setSize(800, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
+        // Painel principal
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setBackground(new Color(64, 64, 64));
         painelPrincipal.setLayout(new BoxLayout(painelPrincipal, BoxLayout.Y_AXIS));
 
+        // Logo
         JLabel lblLogo = new JLabel("VELOCURITIBA", SwingConstants.CENTER);
-        lblLogo.setForeground(laranja);
+        lblLogo.setForeground(new Color(255, 102, 0));
         lblLogo.setFont(new Font("Impact", Font.BOLD, 50));
         lblLogo.setAlignmentX(Component.CENTER_ALIGNMENT);
         painelPrincipal.add(lblLogo);
 
+        // Slogan
         JLabel lblSlogan = new JLabel("Seu caminho, nossa direção", SwingConstants.CENTER);
         lblSlogan.setForeground(Color.LIGHT_GRAY);
         lblSlogan.setFont(new Font("SansSerif", Font.ITALIC, 20));
         lblSlogan.setAlignmentX(Component.CENTER_ALIGNMENT);
         painelPrincipal.add(lblSlogan);
+
         painelPrincipal.add(Box.createVerticalStrut(30));
 
+        // Painel para os campos do formulário
         JPanel painelForm = new JPanel(new GridBagLayout());
         painelForm.setBackground(new Color(64, 64, 64));
         GridBagConstraints gbc = new GridBagConstraints();
