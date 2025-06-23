@@ -15,39 +15,40 @@ public class TelaCliente extends JFrame {
 
     public TelaCliente() {
         setTitle("Cadastro de Clientes - VeloCuritiba");
-        setSize(800, 600);
+        setSize(900, 650);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // Painel principal com fundo cinza
+        // Painel principal
         JPanel painelPrincipal = new JPanel();
-        painelPrincipal.setBackground(new Color(64, 64, 64));
+        painelPrincipal.setBackground(new Color(45, 45, 45));
         painelPrincipal.setLayout(new BoxLayout(painelPrincipal, BoxLayout.Y_AXIS));
+        painelPrincipal.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
 
         // Logo
         JLabel lblLogo = new JLabel("VELOCURITIBA", SwingConstants.CENTER);
         lblLogo.setForeground(new Color(255, 102, 0));
-        lblLogo.setFont(new Font("Impact", Font.BOLD, 50));
+        lblLogo.setFont(new Font("Impact", Font.BOLD, 56));
         lblLogo.setAlignmentX(Component.CENTER_ALIGNMENT);
         painelPrincipal.add(lblLogo);
 
         // Slogan
         JLabel lblSlogan = new JLabel("Seu caminho, nossa direção", SwingConstants.CENTER);
         lblSlogan.setForeground(Color.LIGHT_GRAY);
-        lblSlogan.setFont(new Font("SansSerif", Font.ITALIC, 20));
+        lblSlogan.setFont(new Font("SansSerif", Font.ITALIC, 22));
         lblSlogan.setAlignmentX(Component.CENTER_ALIGNMENT);
         painelPrincipal.add(lblSlogan);
 
-        painelPrincipal.add(Box.createVerticalStrut(30));
+        painelPrincipal.add(Box.createVerticalStrut(25));
 
         // Painel de campos
         JPanel painelCampos = new JPanel(new GridBagLayout());
         painelCampos.setBackground(new Color(64, 64, 64));
+        painelCampos.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), "Informações do Cliente", 0, 0, new Font("Arial", Font.BOLD, 16), Color.WHITE));
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.insets = new Insets(8, 10, 8, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.anchor = GridBagConstraints.EAST;
 
         JLabel[] labels = {
             new JLabel("Nome:"),
@@ -67,7 +68,6 @@ public class TelaCliente extends JFrame {
 
         for (int i = 0; i < labels.length; i++) {
             labels[i].setForeground(Color.WHITE);
-
             gbc.gridx = 0;
             gbc.gridy = i;
             gbc.weightx = 0.3;
@@ -79,17 +79,19 @@ public class TelaCliente extends JFrame {
         }
 
         painelPrincipal.add(painelCampos);
-
-        painelPrincipal.add(Box.createVerticalStrut(30));
+        painelPrincipal.add(Box.createVerticalStrut(25));
 
         // Tabela de clientes
         modelo = new ClienteTableModel(DadosSistema.listaClientes);
         tabela = new JTable(modelo);
+        tabela.setRowHeight(24);
+        tabela.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        tabela.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 15));
         JScrollPane scrollPane = new JScrollPane(tabela);
-        scrollPane.setPreferredSize(new Dimension(700, 150));
+        scrollPane.setPreferredSize(new Dimension(820, 160));
         painelPrincipal.add(scrollPane);
 
-        painelPrincipal.add(Box.createVerticalStrut(30));
+        painelPrincipal.add(Box.createVerticalStrut(20));
 
         // Painel de botões
         JPanel painelBotoes = new JPanel();
@@ -107,12 +109,11 @@ public class TelaCliente extends JFrame {
 
         add(painelPrincipal, BorderLayout.CENTER);
 
-        // Ações dos botões
+        // Ações
         btnAdicionar.addActionListener(e -> adicionarCliente());
         btnAtualizar.addActionListener(e -> atualizarCliente());
         btnExcluir.addActionListener(e -> excluirCliente());
 
-        // Ação para preencher campos ao selecionar linha da tabela
         tabela.getSelectionModel().addListSelectionListener(e -> preencherCampos());
 
         setVisible(true);
@@ -122,8 +123,9 @@ public class TelaCliente extends JFrame {
         JButton botao = new JButton(texto);
         botao.setBackground(new Color(255, 102, 0));
         botao.setForeground(Color.WHITE);
-        botao.setFont(new Font("Arial", Font.BOLD, 18));
+        botao.setFont(new Font("Arial", Font.BOLD, 16));
         botao.setFocusPainted(false);
+        botao.setPreferredSize(new Dimension(130, 40));
         return botao;
     }
 
