@@ -82,6 +82,15 @@ public class TelaCliente extends JFrame {
 
         painelPrincipal.add(Box.createVerticalStrut(30));
 
+        // Tabela de clientes
+        modelo = new ClienteTableModel(DadosSistema.listaClientes);
+        tabela = new JTable(modelo);
+        JScrollPane scrollPane = new JScrollPane(tabela);
+        scrollPane.setPreferredSize(new Dimension(700, 150));
+        painelPrincipal.add(scrollPane);
+
+        painelPrincipal.add(Box.createVerticalStrut(30));
+
         // Painel de botões
         JPanel painelBotoes = new JPanel();
         painelBotoes.setBackground(new Color(64, 64, 64));
@@ -102,6 +111,9 @@ public class TelaCliente extends JFrame {
         btnAdicionar.addActionListener(e -> adicionarCliente());
         btnAtualizar.addActionListener(e -> atualizarCliente());
         btnExcluir.addActionListener(e -> excluirCliente());
+
+        // Ação para preencher campos ao selecionar linha da tabela
+        tabela.getSelectionModel().addListSelectionListener(e -> preencherCampos());
 
         setVisible(true);
     }
@@ -128,16 +140,60 @@ public class TelaCliente extends JFrame {
                 txtEndereco.getText().trim()
         );
         DadosSistema.listaClientes.add(c);
+        modelo.fireTableDataChanged();
         JOptionPane.showMessageDialog(this, "Cliente adicionado com sucesso.");
         limparCampos();
     }
 
     private void atualizarCliente() {
-        // Implemente aqui se necessário
+        int row = tabela.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione um cliente para atualizar.");
+            return;
+        }
+        if (camposEstaoVazios()) {
+            JOptionPane.showMessageDialog(this, "Preencha todos os campos.");
+            return;
+        }
+        Cliente cliente = DadosSistema.listaClientes.get(row);
+        cliente.setNome(txtNome.getText().trim());
+        cliente.setSobrenome(txtSobrenome.getText().trim());
+        cliente.setRg(txtRg.getText().trim());
+        cliente.setCpf(txtCpf.getText().trim());
+        cliente.setEndereco(txtEndereco.getText().trim());
+
+        modelo.fireTableDataChanged();
+        JOptionPane.showMessageDialog(this, "Cliente atualizado com sucesso.");
+        limparCampos();
     }
 
     private void excluirCliente() {
-        // Implemente aqui se necessário
+        int row = tabela.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione um cliente para excluir.");
+            return;
+        }
+        Cliente cliente = DadosSistema.listaClientes.get(row);
+        if (cliente.isTemVeiculoLocado()) {
+            JOptionPane.showMessageDialog(this, "Cliente possui veículo locado. Não pode ser excluído.");
+        } else {
+            DadosSistema.listaClientes.remove(row);
+            modelo.fireTableDataChanged();
+            JOptionPane.showMessageDialog(this, "Cliente excluído com sucesso.");
+            limparCampos();
+        }
+    }
+
+    private void preencherCampos() {
+        int row = tabela.getSelectedRow();
+        if (row != -1) {
+            Cliente cliente = DadosSistema.listaClientes.get(row);
+            txtNome.setText(cliente.getNome());
+            txtSobrenome.setText(cliente.getSobrenome());
+            txtRg.setText(cliente.getRg());
+            txtCpf.setText(cliente.getCpf());
+            txtEndereco.setText(cliente.getEndereco());
+        }
     }
 
     private boolean camposEstaoVazios() {
@@ -154,6 +210,7 @@ public class TelaCliente extends JFrame {
         txtRg.setText("");
         txtCpf.setText("");
         txtEndereco.setText("");
+        tabela.clearSelection();
     }
 
     public static void main(String[] args) {

@@ -206,10 +206,12 @@ public class TelaVenda extends JFrame {
             return switch (col) {
                 case 0 -> v.getPlaca();
                 case 1 -> v.getMarca();
-                case 2 -> String.format("%04d", v.getAno());
-                case 3 -> NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(v.getValorParaVenda());
+                //case 2 -> v.getModelo(); 
+                case 3 -> v.getAno();
+                case 4 -> NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(v.getValorParaVenda());
                 default -> null;
             };
         }
+
     }
 }

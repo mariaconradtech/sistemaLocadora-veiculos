@@ -236,7 +236,18 @@ public class TelaLocacao extends JFrame {
         @Override
         public Object getValueAt(int row, int col) {
             Veiculo v = veiculos.get(row);
-            return null;
-        };
+            switch (col) {
+                case 0: return v.getPlaca();
+                case 1: return v.getMarca();
+                case 2:
+                    if (v instanceof Automovel) return ((Automovel) v).getModelo();
+                    if (v instanceof Motocicleta) return ((Motocicleta) v).getModelo();
+                    if (v instanceof Van) return ((Van) v).getModelo();
+                    return "N/A";
+                case 3: return v.getAno();
+                case 4: return String.format("R$ %.2f", v.getValorDiariaLocacao());
+                default: return "";
+            }
+        }    
     }
 }
