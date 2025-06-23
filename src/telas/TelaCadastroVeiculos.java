@@ -5,6 +5,7 @@ import controle.DadosSistema;
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;
 import java.awt.*;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Calendar;
 
@@ -14,7 +15,7 @@ public class TelaCadastroVeiculos extends JFrame {
     private JComboBox<Marca> comboMarca;
     private JComboBox<Categoria> comboCategoria;
     private JComboBox<Estado> comboEstado;
-    private JTextField txtValorCompra;
+    private JFormattedTextField txtValorCompra;
     private JFormattedTextField txtPlaca;
     private JTextField txtAno;
     private JComboBox<Object> comboModelo;
@@ -22,13 +23,11 @@ public class TelaCadastroVeiculos extends JFrame {
     public TelaCadastroVeiculos() {
         setTitle("Cadastro de Veículos - VeloCuritiba");
 
-        // Tamanho fixo da janela
         setSize(800, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // Painel principal
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setBackground(new Color(64, 64, 64));
         painelPrincipal.setLayout(new BoxLayout(painelPrincipal, BoxLayout.Y_AXIS));
@@ -49,7 +48,7 @@ public class TelaCadastroVeiculos extends JFrame {
 
         painelPrincipal.add(Box.createVerticalStrut(30));
 
-        // Painel para os campos do formulário
+        // Painel de campos
         JPanel painelCampos = new JPanel(new GridBagLayout());
         painelCampos.setBackground(new Color(64, 64, 64));
         GridBagConstraints gbc = new GridBagConstraints();
@@ -57,7 +56,7 @@ public class TelaCadastroVeiculos extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.EAST;
 
-        // Placa com máscara (ABC-1234)
+        // Máscara para Placa (ABC-1234)
         try {
             MaskFormatter placaFormatter = new MaskFormatter("UUU-####");
             placaFormatter.setPlaceholderCharacter('_');
@@ -66,8 +65,10 @@ public class TelaCadastroVeiculos extends JFrame {
             txtPlaca = new JFormattedTextField();
         }
 
-        // Campo valor de compra JTextField (campo livre, mas com validação no salvar)
-        txtValorCompra = new JTextField();
+        // Máscara para Valor de Compra (Moeda)
+        NumberFormat formatoMoeda = NumberFormat.getNumberInstance();
+        txtValorCompra = new JFormattedTextField(formatoMoeda);
+        txtValorCompra.setColumns(10);
 
         // Campos e Labels
         JLabel[] labels = {
@@ -94,7 +95,6 @@ public class TelaCadastroVeiculos extends JFrame {
 
         Dimension campoDimensao = new Dimension(300, 30);
 
-        // Layout dos campos na tela
         for (int i = 0; i < labels.length; i++) {
             labels[i].setForeground(Color.WHITE);
             labels[i].setFont(new Font("SansSerif", Font.BOLD, 16));
@@ -113,12 +113,10 @@ public class TelaCadastroVeiculos extends JFrame {
 
         painelPrincipal.add(painelCampos);
 
-        // Atualiza modelos ao trocar o tipo
         comboTipo.addActionListener(e -> atualizarModelos());
 
         painelPrincipal.add(Box.createVerticalStrut(30));
 
-        // Botão Salvar
         JButton btnSalvar = criarBotaoEstilo("Salvar Veículo");
         btnSalvar.setAlignmentX(Component.CENTER_ALIGNMENT);
         painelPrincipal.add(btnSalvar);
@@ -128,7 +126,6 @@ public class TelaCadastroVeiculos extends JFrame {
         add(painelPrincipal, BorderLayout.CENTER);
     }
 
-    // Estilo do botão salvar
     private JButton criarBotaoEstilo(String texto) {
         JButton botao = new JButton(texto);
         botao.setBackground(new Color(255, 102, 0));
@@ -138,7 +135,6 @@ public class TelaCadastroVeiculos extends JFrame {
         return botao;
     }
 
-    // Preenche o ComboBox de modelos com base no Tipo
     private void atualizarModelos() {
         comboModelo.removeAllItems();
         String tipo = (String) comboTipo.getSelectedItem();
@@ -157,7 +153,6 @@ public class TelaCadastroVeiculos extends JFrame {
         }
     }
 
-    // Validação e salvamento do veículo
     private void salvarVeiculo() {
         try {
             String tipo = (String) comboTipo.getSelectedItem();
@@ -165,11 +160,10 @@ public class TelaCadastroVeiculos extends JFrame {
             Categoria categoria = (Categoria) comboCategoria.getSelectedItem();
             Estado estado = (Estado) comboEstado.getSelectedItem();
 
-            // Validação: valor de compra deve ser numérico
-            double valorCompra = Double.parseDouble(txtValorCompra.getText());
+            // Converte o texto da máscara para double
+            String valorTexto = txtValorCompra.getText().replace(".", "").replace(",", ".");
+            double valorCompra = Double.parseDouble(valorTexto);
 
-
-            // Validação: ano deve ser inteiro e dentro de um intervalo válido
             int ano = Integer.parseInt(txtAno.getText());
             int anoAtual = Calendar.getInstance().get(Calendar.YEAR);
             if (ano < 1900 || ano > (anoAtual + 1)) {
@@ -178,11 +172,10 @@ public class TelaCadastroVeiculos extends JFrame {
             }
 
             String placa = txtPlaca.getText();
-
-            Veiculo veiculo = null;
             Object modeloSelecionado = comboModelo.getSelectedItem();
 
-            // Criação do objeto correto baseado no Tipo selecionado
+            Veiculo veiculo = null;
+
             if (tipo.equals("Automóvel") && modeloSelecionado instanceof ModeloAutomovel) {
                 veiculo = new Automovel(marca, estado, categoria, valorCompra, placa, ano, (ModeloAutomovel) modeloSelecionado);
             } else if (tipo.equals("Motocicleta") && modeloSelecionado instanceof ModeloMotocicleta) {
@@ -192,7 +185,6 @@ public class TelaCadastroVeiculos extends JFrame {
             }
 
             if (veiculo != null) {
-                // Salva o veículo na memória (lista global)
                 DadosSistema.listaVeiculos.add(veiculo);
                 JOptionPane.showMessageDialog(this, "Veículo cadastrado com sucesso!");
                 limparCampos();
@@ -205,10 +197,9 @@ public class TelaCadastroVeiculos extends JFrame {
         }
     }
 
-    // Limpa os campos após salvar
     private void limparCampos() {
-        txtValorCompra.setText("");
-        txtPlaca.setText("");
+        txtValorCompra.setValue(null);
+        txtPlaca.setValue(null);
         txtAno.setText("");
         comboModelo.setSelectedIndex(-1);
     }
