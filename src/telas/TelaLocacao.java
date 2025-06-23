@@ -27,10 +27,6 @@ public class TelaLocacao extends JFrame {
     private List<Veiculo> listaVeiculos;
     private List<Veiculo> veiculosFiltrados = new ArrayList<>();
 
-    private final Color laranja = new Color(255, 102, 0);
-    private final Color textoClaro = Color.WHITE;
-    private final Font fontePadrao = new Font("Arial", Font.PLAIN, 16);
-
     public TelaLocacao(List<Cliente> clientes, List<Veiculo> veiculos) {
         this.listaClientes = clientes;
         this.listaVeiculos = veiculos;
@@ -99,7 +95,7 @@ public class TelaLocacao extends JFrame {
         txtDias = new JTextField();
         txtDataLocacao = new JTextField(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
 
-        // Renderizadores para exibir "Todas"
+        //Exibir "Todas"
         comboMarca.setRenderer((list, value, index, isSelected, cellHasFocus) -> {
             JLabel label = new JLabel(value == null ? "--Todas as Marcas--" : value.toString());
             label.setOpaque(true);
@@ -121,7 +117,7 @@ public class TelaLocacao extends JFrame {
         };
 
         for (int i = 0; i < labels.length; i++) {
-            labels[i].setForeground(textoClaro);
+            labels[i].setForeground(Color.WHITE);
             gbc.gridx = 0;
             gbc.gridy = i;
             gbc.weightx = 0.3;
@@ -157,14 +153,14 @@ public class TelaLocacao extends JFrame {
 
     private JLabel criarLabel(String texto) {
         JLabel lbl = new JLabel(texto);
-        lbl.setForeground(textoClaro);
-        lbl.setFont(fontePadrao);
+        lbl.setForeground(Color.WHITE);
+        lbl.setFont(new Font("Arial", Font.PLAIN, 16));
         return lbl;
     }
 
     private JButton criarBotaoEstilo(String texto) {
         JButton botao = new JButton(texto);
-        botao.setBackground(laranja);
+        botao.setBackground(new Color(255, 102, 0));
         botao.setForeground(Color.WHITE);
         botao.setFont(new Font("Arial", Font.BOLD, 20));
         botao.setFocusPainted(false);
