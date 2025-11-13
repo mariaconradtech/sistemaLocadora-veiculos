@@ -41,9 +41,9 @@ public class SistemaLocadora {
        
         List<Veiculo> listaVeiculos = new ArrayList<>();
 
-        Automovel automovel = new Automovel(Marca.Fiat, Estado.DISPONIVEL, Categoria.Popular, 50000.0, "ABC-1234", 2020, ModeloAutomovel.Palio);
-        Motocicleta moto = new Motocicleta(Marca.Honda, Estado.DISPONIVEL, Categoria.Intermediário, 20000.0, "DEF-5678", 2021, ModeloMotocicleta.CG_125);
-        Van van = new Van(Marca.VW, Estado.DISPONIVEL, Categoria.Luxo, 90000.0, "GHI-9012", 2019, ModeloVan.Kombi);
+        Automovel automovel = new Automovel(Marca.Fiat, Estado.DISPONIVEL, Categoria.POPULAR, 50000.0, "ABC-1234", 2020, ModeloAutomovel.Palio);
+        Motocicleta moto = new Motocicleta(Marca.Honda, Estado.DISPONIVEL, Categoria.INTERMEDIARIO, 20000.0, "DEF-5678", 2021, ModeloMotocicleta.CG_125);
+        Van van = new Van(Marca.VW, Estado.DISPONIVEL, Categoria.LUXO, 90000.0, "GHI-9012", 2019, ModeloVan.Kombi);
 
         listaVeiculos.add(automovel);
         listaVeiculos.add(moto);
