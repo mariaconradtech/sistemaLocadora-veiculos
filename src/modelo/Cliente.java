@@ -2,6 +2,7 @@ package modelo;
 
 
 public class Cliente {
+    private Integer id; // id gerado pelo banco (pode ser null antes de persistir)
     private String nome;
     private String sobrenome;
     private String rg;
@@ -10,6 +11,11 @@ public class Cliente {
     private boolean temVeiculoLocado; // ADICIONADO dentro da classe
 
     public Cliente(String nome, String sobrenome, String rg, String cpf, String endereco) {
+        this(null, nome, sobrenome, rg, cpf, endereco);
+    }
+
+    public Cliente(Integer id, String nome, String sobrenome, String rg, String cpf, String endereco) {
+        this.id = id;
         this.nome = nome;
         this.sobrenome = sobrenome;
         this.rg = rg;
@@ -19,6 +25,9 @@ public class Cliente {
     }
 
     // Getters e Setters
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+
     public String getNome() { return nome; }
     public String getSobrenome() { return sobrenome; }
     public String getRg() { return rg; }

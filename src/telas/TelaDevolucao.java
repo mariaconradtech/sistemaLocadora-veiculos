@@ -6,6 +6,7 @@
 package telas;
 
 import modelo.*;
+import controle.VeiculoController;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
@@ -18,11 +19,10 @@ public class TelaDevolucao extends JFrame {
     private JTable tabelaVeiculosLocados;
     private List<Veiculo> listaVeiculos;
     private List<Veiculo> veiculosLocados = new ArrayList<>();
+    private VeiculoController veiculoController = new VeiculoController();
 
     private final Color fundo = new Color(64, 64, 64);
     private final Color laranja = new Color(255, 102, 0);
-    private final Color textoClaro = Color.WHITE;
-    private final Font fontePadrao = new Font("Arial", Font.PLAIN, 16);
 
     public TelaDevolucao(List<Veiculo> veiculos) {
         this.listaVeiculos = veiculos;
@@ -75,6 +75,11 @@ public class TelaDevolucao extends JFrame {
         setVisible(true);
     }
 
+    // construtor que carrega veículos do DB
+    public TelaDevolucao() {
+        this(new VeiculoController().listarTodos());
+    }
+
     private JButton criarBotaoEstilo(String texto) {
         JButton botao = new JButton(texto);
         botao.setBackground(laranja);
@@ -86,6 +91,8 @@ public class TelaDevolucao extends JFrame {
 
     private void filtrarVeiculosLocados() {
         veiculosLocados.clear();
+        // recarrega lista do banco
+        listaVeiculos = veiculoController.listarTodos();
         for (Veiculo v : listaVeiculos) {
             if (v.getEstado() == Estado.LOCADO) {
                 veiculosLocados.add(v);
@@ -104,8 +111,13 @@ public class TelaDevolucao extends JFrame {
 
         Veiculo v = veiculosLocados.get(linha);
         v.devolver();
-        JOptionPane.showMessageDialog(this, "Veículo devolvido com sucesso!");
-        filtrarVeiculosLocados();
+        boolean ok = veiculoController.devolver(v.getId());
+        if (ok) {
+            JOptionPane.showMessageDialog(this, "Veículo devolvido com sucesso!");
+            filtrarVeiculosLocados();
+        } else {
+            JOptionPane.showMessageDialog(this, "Erro ao persistir devolução. Verifique o log.");
+        }
     }
 
     class VeiculoLocadoTableModel extends AbstractTableModel {

@@ -1,6 +1,7 @@
 package telas;
 
 import modelo.*;
+import controle.VeiculoController;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -18,6 +19,7 @@ public class TelaVenda extends JFrame {
 
     private List<Veiculo> listaVeiculos;
     private List<Veiculo> veiculosFiltrados = new ArrayList<>();
+    private VeiculoController veiculoController = new VeiculoController();
 
     private final Color laranja = new Color(255, 102, 0);
     private final Color textoClaro = Color.WHITE;
@@ -125,6 +127,11 @@ public class TelaVenda extends JFrame {
         setVisible(true);
     }
 
+    // construtor que carrega do DB
+    public TelaVenda() {
+        this(new VeiculoController().listarTodos());
+    }
+
     private JLabel criarLabel(String texto) {
         JLabel lbl = new JLabel(texto);
         lbl.setForeground(textoClaro);
@@ -148,6 +155,9 @@ public class TelaVenda extends JFrame {
 
     private void filtrarVeiculos() {
         veiculosFiltrados.clear();
+        // recarrega do DB
+        listaVeiculos = veiculoController.listarTodos();
+
         String tipo = (String) comboTipoVeiculo.getSelectedItem();
         Marca marca = (Marca) comboMarca.getSelectedItem();
         Categoria categoria = (Categoria) comboCategoria.getSelectedItem();
@@ -173,8 +183,13 @@ public class TelaVenda extends JFrame {
 
         Veiculo v = veiculosFiltrados.get(linha);
         v.vender();
-        JOptionPane.showMessageDialog(this, "Veículo vendido com sucesso!");
-        filtrarVeiculos();
+        boolean ok = veiculoController.vender(v.getId());
+        if (ok) {
+            JOptionPane.showMessageDialog(this, "Veículo vendido com sucesso!");
+            filtrarVeiculos();
+        } else {
+            JOptionPane.showMessageDialog(this, "Erro ao persistir venda. Verifique o log.");
+        }
     }
 
     class VeiculoVendaTableModel extends AbstractTableModel {
@@ -212,7 +227,7 @@ public class TelaVenda extends JFrame {
                     if (v instanceof Van) return ((Van) v).getModelo();
                     return "N/A";
                 case 3: return v.getAno();
-                case 4: return NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(v.getValorParaVenda());
+                case 4: return NumberFormat.getCurrencyInstance(Locale.of("pt", "BR")).format(v.getValorParaVenda());
                 default: return "";
             }
         }

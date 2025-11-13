@@ -7,6 +7,8 @@
 package telas;
 
 import modelo.*;
+import controle.ClienteController;
+import controle.VeiculoController;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -26,6 +28,7 @@ public class TelaLocacao extends JFrame {
     private List<Cliente> listaClientes;
     private List<Veiculo> listaVeiculos;
     private List<Veiculo> veiculosFiltrados = new ArrayList<>();
+    private VeiculoController veiculoController = new VeiculoController();
 
     public TelaLocacao(List<Cliente> clientes, List<Veiculo> veiculos) {
         this.listaClientes = clientes;
@@ -151,6 +154,11 @@ public class TelaLocacao extends JFrame {
         setVisible(true);
     }
 
+    // novo construtor que carrega via DAO
+    public TelaLocacao() {
+        this(new ClienteController().listarTodos(), new VeiculoController().listarTodos());
+    }
+
     private JLabel criarLabel(String texto) {
         JLabel lbl = new JLabel(texto);
         lbl.setForeground(Color.WHITE);
@@ -174,6 +182,9 @@ public class TelaLocacao extends JFrame {
 
     private void filtrarVeiculos() {
         veiculosFiltrados.clear();
+        // recarrega veículos do banco para refletir estado atual
+        listaVeiculos = veiculoController.listarTodos();
+
         String tipo = (String) comboTipoVeiculo.getSelectedItem();
         Marca marca = (Marca) comboMarca.getSelectedItem();
         Categoria categoria = (Categoria) comboCategoria.getSelectedItem();
@@ -206,8 +217,14 @@ public class TelaLocacao extends JFrame {
             Cliente c = listaClientes.get(comboCliente.getSelectedIndex());
 
             v.locar(dias, cal, c);
-            JOptionPane.showMessageDialog(this, "Veículo locado com sucesso!");
-            filtrarVeiculos();
+            // persiste alterações
+            boolean ok = veiculoController.locar(v.getId(), c.getId(), dias, cal);
+            if (ok) {
+                JOptionPane.showMessageDialog(this, "Veículo locado com sucesso!");
+                filtrarVeiculos();
+            } else {
+                JOptionPane.showMessageDialog(this, "Erro ao persistir locação. Verifique o log.");
+            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Erro: " + e.getMessage());
         }

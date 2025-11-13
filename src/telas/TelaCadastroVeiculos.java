@@ -1,7 +1,7 @@
 package telas;
 
 import modelo.*;
-import controle.DadosSistema;
+import controle.VeiculoController;
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;
 import java.awt.*;
@@ -14,11 +14,11 @@ public class TelaCadastroVeiculos extends JFrame {
     private JComboBox<String> comboTipo;
     private JComboBox<Marca> comboMarca;
     private JComboBox<Categoria> comboCategoria;
-    private JComboBox<Estado> comboEstado;
     private JFormattedTextField txtValorCompra;
     private JFormattedTextField txtPlaca;
     private JTextField txtAno;
     private JComboBox<Object> comboModelo;
+    private VeiculoController veiculoController = new VeiculoController();
 
     public TelaCadastroVeiculos() {
         setTitle("Cadastro de Veículos - VeloCuritiba");
@@ -87,7 +87,6 @@ public class TelaCadastroVeiculos extends JFrame {
             comboMarca = new JComboBox<>(Marca.values()),
             comboModelo = new JComboBox<>(),
             comboCategoria = new JComboBox<>(Categoria.values()),
-            comboEstado = new JComboBox<>(Estado.values()),
             txtValorCompra,
             txtPlaca,
             txtAno = new JTextField()
@@ -158,7 +157,6 @@ public class TelaCadastroVeiculos extends JFrame {
             String tipo = (String) comboTipo.getSelectedItem();
             Marca marca = (Marca) comboMarca.getSelectedItem();
             Categoria categoria = (Categoria) comboCategoria.getSelectedItem();
-            Estado estado = (Estado) comboEstado.getSelectedItem();
 
             // Converte o texto da máscara para double
             String valorTexto = txtValorCompra.getText().replace(".", "").replace(",", ".");
@@ -177,15 +175,14 @@ public class TelaCadastroVeiculos extends JFrame {
             Veiculo veiculo = null;
 
             if (tipo.equals("Automóvel") && modeloSelecionado instanceof ModeloAutomovel) {
-                veiculo = new Automovel(marca, estado, categoria, valorCompra, placa, ano, (ModeloAutomovel) modeloSelecionado);
+                veiculo = veiculoController.inserirAutomovel(marca, categoria, valorCompra, placa, ano, (ModeloAutomovel) modeloSelecionado);
             } else if (tipo.equals("Motocicleta") && modeloSelecionado instanceof ModeloMotocicleta) {
-                veiculo = new Motocicleta(marca, estado, categoria, valorCompra, placa, ano, (ModeloMotocicleta) modeloSelecionado);
+                veiculo = veiculoController.inserirMotocicleta(marca, categoria, valorCompra, placa, ano, (ModeloMotocicleta) modeloSelecionado);
             } else if (tipo.equals("Van") && modeloSelecionado instanceof ModeloVan) {
-                veiculo = new Van(marca, estado, categoria, valorCompra, placa, ano, (ModeloVan) modeloSelecionado);
+                veiculo = veiculoController.inserirVan(marca, categoria, valorCompra, placa, ano, (ModeloVan) modeloSelecionado);
             }
 
             if (veiculo != null) {
-                DadosSistema.listaVeiculos.add(veiculo);
                 JOptionPane.showMessageDialog(this, "Veículo cadastrado com sucesso!");
                 limparCampos();
             } else {

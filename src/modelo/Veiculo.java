@@ -9,6 +9,7 @@ package modelo;
  * @author maria
  */
 public abstract class Veiculo implements VeiculoI {
+    private Integer id; // id para persistência
     protected Marca marca;
     protected Estado estado;
     protected Locacao locacao;
@@ -18,6 +19,7 @@ public abstract class Veiculo implements VeiculoI {
     protected int ano;
 
     public Veiculo(Marca marca, Estado estado, Categoria categoria, double valorDeCompra, String placa, int ano) {
+        this.id = null;
         this.marca = marca;
         this.estado = estado;
         this.categoria = categoria;
@@ -33,17 +35,28 @@ public abstract class Veiculo implements VeiculoI {
             double valorLocacao = dias * getValorDiariaLocacao();
             this.locacao = new Locacao(dias, valorLocacao, data, cliente);
             this.estado = Estado.LOCADO;
+            // marca no cliente que ele tem um veículo locado
+            if (cliente != null) {
+                cliente.setTemVeiculoLocado(true);
+            }
         }
     }
 
     @Override
     public void vender() {
+        // se estava locado, libera o cliente
+        if (this.locacao != null && this.locacao.getCliente() != null) {
+            this.locacao.getCliente().setTemVeiculoLocado(false);
+        }
         this.estado = Estado.VENDIDO;
         this.locacao = null;
     }
 
     @Override
     public void devolver() {
+        if (this.locacao != null && this.locacao.getCliente() != null) {
+            this.locacao.getCliente().setTemVeiculoLocado(false);
+        }
         this.locacao = null;
         this.estado = Estado.DISPONIVEL;
     }
@@ -79,4 +92,10 @@ public abstract class Veiculo implements VeiculoI {
     
     @Override
     public abstract double getValorDiariaLocacao();
+
+    // getters/setters para persistência
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+    public double getValorDeCompra() { return valorDeCompra; }
+    public void setLocacao(Locacao loc) { this.locacao = loc; }
 }

@@ -2,7 +2,7 @@
 package telas; 
 
 import modelo.Cliente; 
-import controle.DadosSistema; 
+import controle.ClienteController; 
 
 import javax.swing.*; // Importa todos os componentes Swing para interface gráfica
 import java.awt.*; // Importa classes para layout e cores
@@ -19,6 +19,7 @@ public class TelaCliente extends JFrame {
     // Tabela para listar os clientes e seu modelo
     private JTable tabela;
     private ClienteTableModel modelo;
+    private ClienteController clienteController = new ClienteController();
 
     // Construtor da tela
     public TelaCliente() {
@@ -91,7 +92,14 @@ public class TelaCliente extends JFrame {
         painelPrincipal.add(painelCampos); // Adiciona painel de campos ao painel principal
         painelPrincipal.add(Box.createVerticalStrut(25)); 
 
-        modelo = new ClienteTableModel(DadosSistema.listaClientes); // Modelo da tabela com dados
+        modelo = new ClienteTableModel(clienteController.listarTodos()); // Modelo da tabela com dados (do DB)
+        // atualiza flag de clientes que possuem locação ativa
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            Cliente c = modelo.getCliente(i);
+            if (c.getId() != null) {
+                clienteController.atualizarStatusLocacao(c.getId());
+            }
+        }
         tabela = new JTable(modelo); // Cria tabela com o modelo
 
         // Estiliza a tabela
@@ -165,7 +173,7 @@ public class TelaCliente extends JFrame {
             return;
         }
 
-        Cliente c = new Cliente(
+        Cliente inserido = clienteController.inserir(
             txtNome.getText().trim(),
             txtSobrenome.getText().trim(),
             txtRg.getText().trim(),
@@ -173,10 +181,14 @@ public class TelaCliente extends JFrame {
             txtEndereco.getText().trim()
         );
 
-        DadosSistema.listaClientes.add(c); // Adiciona à lista
-        modelo.fireTableDataChanged(); // Atualiza a tabela
-        JOptionPane.showMessageDialog(this, "Cliente adicionado com sucesso.");
-        limparCampos(); // Limpa os campos após adicionar
+        if (inserido != null) {
+            modelo = new ClienteTableModel(clienteController.listarTodos());
+            tabela.setModel(modelo);
+            JOptionPane.showMessageDialog(this, "Cliente adicionado com sucesso.");
+            limparCampos();
+        } else {
+            JOptionPane.showMessageDialog(this, "Erro ao adicionar cliente. Verifique o log.");
+        }
     }
 
     // Atualiza os dados de um cliente selecionado
@@ -199,16 +211,24 @@ public class TelaCliente extends JFrame {
             return;
         }
 
-        Cliente cliente = DadosSistema.listaClientes.get(row); // Obtém cliente da lista
-        cliente.setNome(txtNome.getText().trim());
-        cliente.setSobrenome(txtSobrenome.getText().trim());
-        cliente.setRg(txtRg.getText().trim());
-        cliente.setCpf(txtCpf.getText().trim());
-        cliente.setEndereco(txtEndereco.getText().trim());
+        Cliente cliente = modelo.getCliente(row);
+        boolean ok = clienteController.atualizar(
+            cliente.getId(),
+            txtNome.getText().trim(),
+            txtSobrenome.getText().trim(),
+            txtRg.getText().trim(),
+            txtCpf.getText().trim(),
+            txtEndereco.getText().trim()
+        );
 
-        modelo.fireTableDataChanged(); // Atualiza tabela
-        JOptionPane.showMessageDialog(this, "Cliente atualizado com sucesso.");
-        limparCampos();
+        if (ok) {
+            modelo = new ClienteTableModel(clienteController.listarTodos());
+            tabela.setModel(modelo);
+            JOptionPane.showMessageDialog(this, "Cliente atualizado com sucesso.");
+            limparCampos();
+        } else {
+            JOptionPane.showMessageDialog(this, "Erro ao atualizar cliente. Verifique o log.");
+        }
     }
 
     // Exclui o cliente da lista (se permitido)
@@ -218,14 +238,15 @@ public class TelaCliente extends JFrame {
             JOptionPane.showMessageDialog(this, "Selecione um cliente para excluir.");
             return;
         }
-        Cliente cliente = DadosSistema.listaClientes.get(row);
-        if (cliente.isTemVeiculoLocado()) {
-            JOptionPane.showMessageDialog(this, "Cliente possui veículo locado. Não pode ser excluído.");
-        } else {
-            DadosSistema.listaClientes.remove(row); // Remove cliente da lista
-            modelo.fireTableDataChanged(); // Atualiza a tabela
+        Cliente cliente = modelo.getCliente(row);
+        boolean ok = clienteController.excluir(cliente.getId());
+        if (ok) {
+            modelo = new ClienteTableModel(clienteController.listarTodos());
+            tabela.setModel(modelo);
             JOptionPane.showMessageDialog(this, "Cliente excluído com sucesso.");
             limparCampos();
+        } else {
+            JOptionPane.showMessageDialog(this, "Cliente possui veículo locado. Não pode ser excluído.");
         }
     }
 
@@ -233,7 +254,7 @@ public class TelaCliente extends JFrame {
     private void preencherCampos() {
         int row = tabela.getSelectedRow();
         if (row != -1) {
-            Cliente cliente = DadosSistema.listaClientes.get(row);
+            Cliente cliente = modelo.getCliente(row);
             txtNome.setText(cliente.getNome());
             txtSobrenome.setText(cliente.getSobrenome());
             txtRg.setText(cliente.getRg());
