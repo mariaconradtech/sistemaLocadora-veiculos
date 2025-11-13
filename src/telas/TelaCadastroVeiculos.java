@@ -76,7 +76,6 @@ public class TelaCadastroVeiculos extends JFrame {
             new JLabel("Marca:"),
             new JLabel("Modelo:"),
             new JLabel("Categoria:"),
-            new JLabel("Estado:"),
             new JLabel("Valor de Compra (R$):"),
             new JLabel("Placa:"),
             new JLabel("Ano:")
@@ -137,6 +136,11 @@ public class TelaCadastroVeiculos extends JFrame {
     private void atualizarModelos() {
         comboModelo.removeAllItems();
         String tipo = (String) comboTipo.getSelectedItem();
+        
+        if (tipo == null || tipo.isEmpty()) {
+            return; // Sai se nenhum tipo selecionado
+        }
+        
         if (tipo.equals("Automóvel")) {
             for (ModeloAutomovel m : ModeloAutomovel.values()) {
                 comboModelo.addItem(m);

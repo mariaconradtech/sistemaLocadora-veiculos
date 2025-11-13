@@ -92,13 +92,19 @@ public class TelaCliente extends JFrame {
         painelPrincipal.add(painelCampos); // Adiciona painel de campos ao painel principal
         painelPrincipal.add(Box.createVerticalStrut(25)); 
 
-        modelo = new ClienteTableModel(clienteController.listarTodos()); // Modelo da tabela com dados (do DB)
-        // atualiza flag de clientes que possuem locação ativa
-        for (int i = 0; i < modelo.getRowCount(); i++) {
-            Cliente c = modelo.getCliente(i);
-            if (c.getId() != null) {
-                clienteController.atualizarStatusLocacao(c.getId());
+        try {
+            modelo = new ClienteTableModel(clienteController.listarTodos()); // Modelo da tabela com dados (do DB)
+            // atualiza flag de clientes que possuem locação ativa
+            for (int i = 0; i < modelo.getRowCount(); i++) {
+                Cliente c = modelo.getCliente(i);
+                if (c.getId() != null) {
+                    clienteController.atualizarStatusLocacao(c.getId());
+                }
             }
+        } catch (Exception ex) {
+            System.err.println("Erro ao conectar ao BD: " + ex.getMessage());
+            ex.printStackTrace();
+            modelo = new ClienteTableModel(new java.util.ArrayList<>()); // Lista vazia se erro
         }
         tabela = new JTable(modelo); // Cria tabela com o modelo
 

@@ -156,7 +156,27 @@ public class TelaLocacao extends JFrame {
 
     // novo construtor que carrega via DAO
     public TelaLocacao() {
-        this(new ClienteController().listarTodos(), new VeiculoController().listarTodos());
+        this(loadClientes(), loadVeiculos());
+    }
+    
+    private static java.util.List<Cliente> loadClientes() {
+        try {
+            return new ClienteController().listarTodos();
+        } catch (Exception ex) {
+            System.err.println("Erro ao carregar clientes: " + ex.getMessage());
+            ex.printStackTrace();
+            return new java.util.ArrayList<>();
+        }
+    }
+    
+    private static java.util.List<Veiculo> loadVeiculos() {
+        try {
+            return new VeiculoController().listarTodos();
+        } catch (Exception ex) {
+            System.err.println("Erro ao carregar veículos: " + ex.getMessage());
+            ex.printStackTrace();
+            return new java.util.ArrayList<>();
+        }
     }
 
     private JLabel criarLabel(String texto) {

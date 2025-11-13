@@ -77,7 +77,17 @@ public class TelaDevolucao extends JFrame {
 
     // construtor que carrega veículos do DB
     public TelaDevolucao() {
-        this(new VeiculoController().listarTodos());
+        this(loadVeiculos());
+    }
+    
+    private static java.util.List<Veiculo> loadVeiculos() {
+        try {
+            return new VeiculoController().listarTodos();
+        } catch (Exception ex) {
+            System.err.println("Erro ao carregar veículos: " + ex.getMessage());
+            ex.printStackTrace();
+            return new java.util.ArrayList<>();
+        }
     }
 
     private JButton criarBotaoEstilo(String texto) {

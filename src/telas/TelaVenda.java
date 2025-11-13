@@ -129,7 +129,17 @@ public class TelaVenda extends JFrame {
 
     // construtor que carrega do DB
     public TelaVenda() {
-        this(new VeiculoController().listarTodos());
+        this(loadVeiculos());
+    }
+    
+    private static java.util.List<Veiculo> loadVeiculos() {
+        try {
+            return new VeiculoController().listarTodos();
+        } catch (Exception ex) {
+            System.err.println("Erro ao carregar veículos: " + ex.getMessage());
+            ex.printStackTrace();
+            return new java.util.ArrayList<>();
+        }
     }
 
     private JLabel criarLabel(String texto) {
